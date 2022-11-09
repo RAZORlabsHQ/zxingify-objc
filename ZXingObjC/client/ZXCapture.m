@@ -286,7 +286,9 @@
       abort();
     }
     
-    [self.session startRunning];
+      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+          [self.session startRunning];
+      });
   }
   self.running = YES;
 }
@@ -534,7 +536,9 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
                        original);
     
     CGImageRef rotatedImage = CGBitmapContextCreateImage(context);
-    CFRelease(context);
+    if (context != nil) {
+      CFRelease(context);
+    }
     
     return rotatedImage;
   }
